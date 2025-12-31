@@ -1,31 +1,16 @@
 import "./styles.css";
-import { format } from "date-fns";
+import header, { renderHeader } from "./header.js";
+import main, { renderMain } from "./main.js";
+import { getRawData } from "./forecast-storage.js";
+import { format, addDays } from "date-fns";
 
-const API_KEY = "3TJJEBMMGEWLXASWDF9ABF67B";
-const url =
-  "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
+const body = document.body;
 
-const location = "Seoul";
+function init() {
+  renderHeader();
+  renderMain();
 
-async function getWeather() {
-  try {
-    const response = await getResponse(url, location, API_KEY);
-    const data = await getData(response);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-    console.log("try enter location again");
-  }
+  body.append(header, main);
 }
 
-function getResponse(url, location, key) {
-  return fetch(`${url}${location}?unitGroup=metric&key=${key}`);
-}
-
-function getData(response) {
-  return response.json();
-}
-
-console.log(format(new Date(), "yyyy-MM-dd"));
-
-// getWeather();
+init();
