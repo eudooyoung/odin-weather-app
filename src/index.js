@@ -6,9 +6,9 @@ import { format, addDays } from "date-fns";
 
 const body = document.body;
 
-function init() {
+async function init() {
   renderHeader();
-  renderMain();
+  await renderMain();
 
   body.append(header, main);
 }

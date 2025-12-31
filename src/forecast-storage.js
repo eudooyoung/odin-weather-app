@@ -1,12 +1,14 @@
+import { format, addDays } from "date-fns";
+
 const API_KEY = "3TJJEBMMGEWLXASWDF9ABF67B";
 const URL =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-
-let rawData;
+const startDate = format(new Date(), "yyyy-MM-dd");
+const endDate = format(addDays(new Date(), 6), "yyyy-MM-dd");
 
 export function createForeCast(location = "Seoul") {}
 
-export async function getRawData(location = "Seoul", startDate, endDate) {
+export async function getForeCasts(location = "Seoul") {
   const endPoint = `${URL}${location}/${startDate}/${endDate}`;
   const params = new URLSearchParams({
     unitGroup: "metric",
@@ -18,9 +20,9 @@ export async function getRawData(location = "Seoul", startDate, endDate) {
 
   try {
     const response = await fetch(`${endPoint}?${parameters}`);
-    rawData = await response.json();
+    const rawData = await response.json();
     console.log(rawData);
-    return rawData;
+    return rawData.days;
   } catch (error) {
     console.error(error);
   }
