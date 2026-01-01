@@ -1,21 +1,46 @@
-import { format, addDays } from "date-fns";
-import { getForeCasts } from "./forecast-storage";
+import clearDay from "./img/clear-day.png";
 
 const main = document.createElement("main");
+let forecast = null;
 
-export async function renderMain() {
-  const table = await renderTable();
+export function renderMain(currentForecast) {
+  forecast = currentForecast;
+  const form = renderForm();
+  const table = renderTable();
 
-  main.append(table);
+  main.append(form, table);
 }
 
-async function renderTable() {
+export function updateForecasts(newForecast) {
+  forecast = newForecast;
+  updateTable();
+}
+
+function renderForm() {
+  const form = document.createElement("form");
+  form.classList.add("location");
+
+  const label = document.createElement("label");
+  const input = document.createElement("input");
+  const btnSubmit = document.createElement("button");
+  btnSubmit.textContent = "Get Weather";
+
+  label.append(input, btnSubmit);
+
+  form.append(label);
+  return form;
+}
+
+export function getLocation(form) {
+  return form.querySelector("input").value;
+}
+
+function renderTable() {
   const table = document.createElement("table");
-  const forecasts = await getForeCasts();
 
   const caption = renderCaption();
-  const tableHead = renderTableHead(forecasts);
-  const tableBody = renderTableBody(forecasts);
+  const tableHead = renderTableHead();
+  const tableBody = renderTableBody();
 
   table.append(caption, tableHead, tableBody);
 
@@ -25,15 +50,17 @@ async function renderTable() {
 function renderCaption() {
   const caption = document.createElement("caption");
 
+  const location = document.createElement("h2");
+  location.textContent = forecast.address;
   const captionText = document.createElement("h2");
   captionText.textContent = "7-day weather forecast";
 
-  caption.append(captionText);
+  caption.append(location, captionText);
 
   return caption;
 }
 
-function renderTableHead(forecasts) {
+function renderTableHead() {
   const tableHead = document.createElement("thead");
   const tableRow = document.createElement("tr");
 
@@ -41,10 +68,10 @@ function renderTableHead(forecasts) {
   rowHeader.textContent = "Date";
   tableRow.append(rowHeader);
 
-  forecasts.forEach((forecast) => {
+  forecast.days.forEach((day) => {
     const columnHeader = document.createElement("th");
     columnHeader.scope = "col";
-    columnHeader.textContent = forecast.datetime;
+    columnHeader.textContent = day.datetime;
     tableRow.append(columnHeader);
   });
 
@@ -53,73 +80,77 @@ function renderTableHead(forecasts) {
   return tableHead;
 }
 
-function renderTableBody(forecasts) {
+function renderTableBody() {
   const tableBody = document.createElement("tbody");
 
-  const rowWeather = renderRowWeather(forecasts);
-  const rowMinTemp = renderRowMinTemp(forecasts);
-  const rowMaxTemp = renderRowMaxTemp(forecasts);
-  const rowPrecipProb = renderRowPrecipProb(forecasts);
+  const rowWeather = renderRowWeather();
+  const rowMinTemp = renderRowMinTemp();
+  const rowMaxTemp = renderRowMaxTemp();
+  const rowPrecipProb = renderRowPrecipProb();
 
   tableBody.append(rowWeather, rowMinTemp, rowMaxTemp, rowPrecipProb);
 
   return tableBody;
 }
 
-function renderRowWeather(forecasts) {
+function renderRowWeather() {
   const rowWeather = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Weather";
   rowWeather.append(rowHeader);
 
-  forecasts.forEach((forecast) => {
+  forecast.days.forEach(async (day) => {
     const tableData = document.createElement("td");
-    tableData.textContent = forecast.icon;
+    const weatherIcon = document.createElement("img");
+    const { default: src } = await import(`./img/${day.icon}.png`);
+    weatherIcon.src = src;
+
+    tableData.append(weatherIcon);
     rowWeather.append(tableData);
   });
 
   return rowWeather;
 }
 
-function renderRowMinTemp(forecasts) {
+function renderRowMinTemp() {
   const rowMinTemp = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Minimum Temperature";
   rowMinTemp.append(rowHeader);
 
-  forecasts.forEach((forecast) => {
+  forecast.days.forEach((day) => {
     const tableData = document.createElement("td");
-    tableData.textContent = forecast.tempmin;
+    tableData.textContent = day.tempmin + "°C";
     rowMinTemp.append(tableData);
   });
 
   return rowMinTemp;
 }
 
-function renderRowMaxTemp(forecasts) {
+function renderRowMaxTemp() {
   const rowMaxTemp = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Maximum Temperature";
   rowMaxTemp.append(rowHeader);
 
-  forecasts.forEach((forecast) => {
+  forecast.days.forEach((day) => {
     const tableData = document.createElement("td");
-    tableData.textContent = forecast.tempmax;
+    tableData.textContent = day.tempmax + "°C";
     rowMaxTemp.append(tableData);
   });
 
   return rowMaxTemp;
 }
 
-function renderRowPrecipProb(forecasts) {
+function renderRowPrecipProb() {
   const rowPrecipProb = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Precipitation Probability";
   rowPrecipProb.append(rowHeader);
 
-  forecasts.forEach((forecast) => {
+  forecast.days.forEach((day) => {
     const tableData = document.createElement("td");
-    tableData.textContent = forecast.precipprob;
+    tableData.textContent = day.precipprob + "%";
     rowPrecipProb.append(tableData);
   });
 
@@ -130,6 +161,12 @@ function renderRowHeader() {
   const rowHeader = document.createElement("th");
   rowHeader.scope = "row";
   return rowHeader;
+}
+
+function updateTable() {
+  const table = main.querySelector("table");
+  const newTable = renderTable();
+  main.replaceChild(newTable, table);
 }
 
 export default main;
