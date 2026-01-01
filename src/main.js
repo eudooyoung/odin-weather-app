@@ -51,7 +51,7 @@ function renderCaption() {
   const caption = document.createElement("caption");
 
   const location = document.createElement("h2");
-  location.textContent = forecast.address;
+  location.textContent = forecast.resolvedAddress;
   const captionText = document.createElement("h2");
   captionText.textContent = "7-day weather forecast";
 
@@ -99,11 +99,12 @@ function renderRowWeather() {
   rowHeader.textContent = "Weather";
   rowWeather.append(rowHeader);
 
-  forecast.days.forEach(async (day) => {
+  forecast.days.forEach((day) => {
     const tableData = document.createElement("td");
     const weatherIcon = document.createElement("img");
-    const { default: src } = await import(`./img/${day.icon}.png`);
-    weatherIcon.src = src;
+    import(`./img/${day.icon}.png`).then(
+      (src) => (weatherIcon.src = src.default),
+    );
 
     tableData.append(weatherIcon);
     rowWeather.append(tableData);
