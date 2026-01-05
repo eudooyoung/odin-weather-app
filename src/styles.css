@@ -1,3 +1,8 @@
+:root {
+  --background-navy: #011736;
+  --text-white: #f0e6dc;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,8 +11,59 @@
 
 body {
   height: 100dvh;
+  padding: 0 0 0 1.5rem;
+
+  background-color: var(--background-navy);
+
+  display: grid;
+  grid-template-rows: 100px 1fr;
+
+  color: var(--text-white);
+}
+
+header {
+  align-content: center;
+
+  background-color: var(--background-navy);
+
+  color: var(--text-white);
+  font-size: 1.3rem;
+}
+
+main {
+  display: grid;
+  grid-template-rows: 50px 35%;
+}
+
+form.location {
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 1.5rem;
+}
+
+.location label {
+  display: contents;
+}
+
+.location input {
+  width: 700px;
+  border-radius: 10px;
+  padding: 0 10px;
+
+  background: #82a5e775;
+  backdrop-filter: blur(10px) saturate(140%);
+
+  font-size: 120%;
+}
+
+.location button {
+  border-radius: 10px;
+  padding: 0 10px;
+
+  font-size: 0.9rem;
+  font-weight: 900;
 }
 
 table {
-  width: 100dvw;
+  /* width: 100dvw; */
 }

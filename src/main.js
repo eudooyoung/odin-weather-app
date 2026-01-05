@@ -23,7 +23,8 @@ function renderForm() {
   const label = document.createElement("label");
   const input = document.createElement("input");
   const btnSubmit = document.createElement("button");
-  btnSubmit.textContent = "Get Weather";
+  input.placeholder = "Enter a city...";
+  btnSubmit.textContent = "Get Weather!";
 
   label.append(input, btnSubmit);
 

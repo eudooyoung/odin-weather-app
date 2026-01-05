@@ -13,9 +13,8 @@ const params = new URLSearchParams({
   iconSet: "icons2",
 });
 
-export function createForeCast(location = "Seoul") {}
-
 export async function getForecast(location = "Seoul") {
+  location = location === "" ? "Seoul" : location;
   const endPoint = `${URL}${location}/${startDate}/${endDate}`;
   const parameters = params.toString();
 
