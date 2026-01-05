@@ -1,6 +1,17 @@
 :root {
   --background-navy: #011736;
   --text-white: #f0e6dc;
+  --glass-background1: rgba(255, 255, 255, 0.05);
+  --glass-background2: rgba(255, 255, 255, 0.13);
+  --glass-gradient: rgba(255, 255, 255, 0.09);
+  --glass-border1: rgba(255, 255, 255, 0.06);
+  --glass-border2: rgba(255, 255, 255, 0.17);
+  --glass-radius1: 7px;
+  --glass-radius2: 10px;
+  --glass-placeholder: rgba(255, 255, 255, 0.31);
+  --glass-button1: rgba(15, 78, 100, 0.75);
+  --glass-button2: rgba(15, 78, 100, 0.85);
+  --glass-button3: rgba(15, 78, 100, 1);
 }
 
 * {
@@ -11,7 +22,6 @@
 
 body {
   height: 100dvh;
-  padding: 0 0 0 1.5rem;
 
   background-color: var(--background-navy);
 
@@ -23,6 +33,7 @@ body {
 
 header {
   align-content: center;
+  padding-left: 1.5rem;
 
   background-color: var(--background-navy);
 
@@ -31,39 +42,126 @@ header {
 }
 
 main {
+  /* min-width: 100%; */
+
   display: grid;
-  grid-template-rows: 50px 35%;
+  grid-template-rows: 100px 50%;
+  justify-content: center;
+  row-gap: 2rem;
 }
 
 form.location {
-  display: flex;
-  justify-content: flex-start;
-  column-gap: 1.5rem;
+  background-color: var(--glass-background1);
+  background-image: radial-gradient(
+    farthest-side at 80% 50%,
+    var(--glass-gradient),
+    transparent
+  );
+  backdrop-filter: blur(10px) saturate(110%);
+
+  padding: 0 1.5rem;
+  width: 1200px;
+
+  border-radius: var(--glass-radius1);
+  border: 1px solid var(--glass-border1);
 }
 
 .location label {
-  display: contents;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 3rem;
+}
+
+.location input,
+.location button {
+  height: 57px;
 }
 
 .location input {
   width: 700px;
-  border-radius: 10px;
+  border-radius: var(--glass-radius2);
   padding: 0 10px;
 
-  background: #82a5e775;
-  backdrop-filter: blur(10px) saturate(140%);
+  background-color: var(--glass-background2);
+  backdrop-filter: blur(10px);
 
-  font-size: 120%;
+  border: 1px solid var(--glass-border2);
+
+  font-size: 1.8rem;
+}
+
+input:focus {
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--glass-placeholder);
 }
 
 .location button {
-  border-radius: 10px;
   padding: 0 10px;
 
-  font-size: 0.9rem;
+  background-color: var(--glass-button1);
+
+  border: 1px solid var(--glass-border1);
+  border-radius: 10px;
+
+  font-size: 1rem;
   font-weight: 900;
+  color: var(--text-white);
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: var(--glass-button2);
+}
+
+button:active {
+  background-color: var(--glass-button3);
+}
+
+.table-container {
+  padding: 10px 30px;
+
+  background-color: var(--glass-background1);
+  background-image: radial-gradient(
+    farthest-side at 80% 50%,
+    var(--glass-gradient),
+    transparent
+  );
+  backdrop-filter: blur(10px) saturate(130%);
+
+  border: 1px solid var(--glass-border1);
+  border-radius: var(--glass-radius1);
+
+  display: grid;
 }
 
 table {
-  /* width: 100dvw; */
+  table-layout: fixed;
+
+  background-color: var(--glass-background2);
+
+  border: 1px solid var(--glass-border2);
+  border-radius: var(--glass-radius2);
+  border-spacing: 0;
+}
+
+thead {
+  height: 40px;
+}
+
+th[scope="row"] {
+  width: 200px;
+}
+
+td {
+  text-align: center;
+}
+
+tbody tr:first-child {
+  height: 150px;
 }

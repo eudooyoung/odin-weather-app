@@ -1,4 +1,4 @@
-import clearDay from "./img/clear-day.png";
+import { format } from "date-fns";
 
 const main = document.createElement("main");
 let forecast = null;
@@ -6,9 +6,9 @@ let forecast = null;
 export function renderMain(currentForecast) {
   forecast = currentForecast;
   const form = renderForm();
-  const table = renderTable();
+  const tableContainer = renderTableContainer();
 
-  main.append(form, table);
+  main.append(form, tableContainer);
 }
 
 export function updateForecasts(newForecast) {
@@ -23,7 +23,7 @@ function renderForm() {
   const label = document.createElement("label");
   const input = document.createElement("input");
   const btnSubmit = document.createElement("button");
-  input.placeholder = "Enter a city...";
+  input.placeholder = "Enter a city";
   btnSubmit.textContent = "Get Weather!";
 
   label.append(input, btnSubmit);
@@ -34,6 +34,16 @@ function renderForm() {
 
 export function getLocation(form) {
   return form.querySelector("input").value;
+}
+
+function renderTableContainer() {
+  const tableContainer = document.createElement("div");
+  tableContainer.classList.add("table-container");
+
+  const table = renderTable();
+  tableContainer.append(table);
+
+  return tableContainer;
 }
 
 function renderTable() {
@@ -72,7 +82,8 @@ function renderTableHead() {
   forecast.days.forEach((day) => {
     const columnHeader = document.createElement("th");
     columnHeader.scope = "col";
-    columnHeader.textContent = day.datetime;
+    const date = new Date(day.datetime);
+    columnHeader.textContent = format(date, "M.d. EE");
     tableRow.append(columnHeader);
   });
 
@@ -166,9 +177,9 @@ function renderRowHeader() {
 }
 
 function updateTable() {
-  const table = main.querySelector("table");
-  const newTable = renderTable();
-  main.replaceChild(newTable, table);
+  const tableContainer = main.querySelector(".table-container");
+  const newTableContainer = renderTableContainer();
+  main.replaceChild(newTableContainer, tableContainer);
 }
 
 export default main;
