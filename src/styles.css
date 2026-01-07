@@ -3,6 +3,7 @@
   --text-white: #f0e6dc;
   --glass-background1: rgba(255, 255, 255, 0.05);
   --glass-background2: rgba(255, 255, 255, 0.13);
+  --glass-background3: rgba(255, 255, 255, 0.1);
   --glass-gradient: rgba(255, 255, 255, 0.09);
   --glass-border1: rgba(255, 255, 255, 0.06);
   --glass-border2: rgba(255, 255, 255, 0.17);
@@ -21,7 +22,7 @@
 }
 
 body {
-  height: 100dvh;
+  height: 150dvh;
 
   background-color: var(--background-navy);
 
@@ -42,10 +43,9 @@ header {
 }
 
 main {
-  /* min-width: 100%; */
-
   display: grid;
-  grid-template-rows: 100px 50%;
+  grid-template-rows: 100px 500px 1fr;
+  grid-template-columns: 1200px;
   justify-content: center;
   row-gap: 2rem;
 }
@@ -60,7 +60,6 @@ form.location {
   backdrop-filter: blur(10px) saturate(110%);
 
   padding: 0 1.5rem;
-  width: 1200px;
 
   border-radius: var(--glass-radius1);
   border: 1px solid var(--glass-border1);
@@ -91,6 +90,7 @@ form.location {
   border: 1px solid var(--glass-border2);
 
   font-size: 1.8rem;
+  color: var(--text-white);
 }
 
 input:focus {
@@ -128,7 +128,7 @@ button:active {
 
   background-color: var(--glass-background1);
   background-image: radial-gradient(
-    farthest-side at 80% 50%,
+    farthest-side at 80% 70%,
     var(--glass-gradient),
     transparent
   );
@@ -140,9 +140,8 @@ button:active {
   display: grid;
 }
 
-table {
+.daily table {
   table-layout: fixed;
-
   background-color: var(--glass-background2);
 
   border: 1px solid var(--glass-border2);
@@ -150,18 +149,48 @@ table {
   border-spacing: 0;
 }
 
-thead {
+.daily thead {
   height: 40px;
 }
 
-th[scope="row"] {
+.daily th[scope="row"] {
   width: 200px;
 }
 
-td {
+.daily td {
   text-align: center;
 }
 
-tbody tr:first-child {
+/* icon row */
+.daily tbody tr:first-child {
   height: 150px;
+}
+
+.daily th.highlighted,
+.daily td.highlighted {
+  background-color: var(--glass-background3);
+}
+
+/* top-right cell adaptaion */
+.daily th.highlighted:last-child {
+  border-radius: 0 var(--glass-radius2) 0 0;
+}
+
+/* bottom-right cell adaptaion */
+.daily tbody tr:last-child td.highlighted:last-child {
+  border-radius: 0 0 var(--glass-radius2) 0;
+}
+
+.hourly caption {
+  text-align: left;
+}
+
+.table-container.hourly {
+  max-width: 100%;
+  overflow-x: scroll;
+  /* overflow-y: hidden; */
+}
+
+.hourly table {
+  min-width: 100%;
 }

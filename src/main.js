@@ -2,18 +2,16 @@ import { format } from "date-fns";
 
 const main = document.createElement("main");
 let forecast = null;
+let day = null;
 
 export function renderMain(currentForecast) {
   forecast = currentForecast;
+  day = forecast.days[0];
   const form = renderForm();
-  const tableContainer = renderTableContainer();
+  const dailyTableContainer = renderDailyTableContainer();
+  const hourlyTableContainer = renderHourlyTableContainer();
 
-  main.append(form, tableContainer);
-}
-
-export function updateForecasts(newForecast) {
-  forecast = newForecast;
-  updateTable();
+  main.append(form, dailyTableContainer, hourlyTableContainer);
 }
 
 function renderForm() {
@@ -32,33 +30,29 @@ function renderForm() {
   return form;
 }
 
-export function getLocation(form) {
-  return form.querySelector("input").value;
-}
-
-function renderTableContainer() {
+function renderDailyTableContainer() {
   const tableContainer = document.createElement("div");
-  tableContainer.classList.add("table-container");
+  tableContainer.classList.add("table-container", "daily");
 
-  const table = renderTable();
+  const table = renderDailyTable();
   tableContainer.append(table);
 
   return tableContainer;
 }
 
-function renderTable() {
+function renderDailyTable() {
   const table = document.createElement("table");
 
-  const caption = renderCaption();
-  const tableHead = renderTableHead();
-  const tableBody = renderTableBody();
+  const caption = renderDailyCaption();
+  const tableHead = renderDailyTableHead();
+  const tableBody = renderDailyTableBody();
 
   table.append(caption, tableHead, tableBody);
 
   return table;
 }
 
-function renderCaption() {
+function renderDailyCaption() {
   const caption = document.createElement("caption");
 
   const location = document.createElement("h2");
@@ -71,7 +65,7 @@ function renderCaption() {
   return caption;
 }
 
-function renderTableHead() {
+function renderDailyTableHead() {
   const tableHead = document.createElement("thead");
   const tableRow = document.createElement("tr");
 
@@ -92,20 +86,20 @@ function renderTableHead() {
   return tableHead;
 }
 
-function renderTableBody() {
+function renderDailyTableBody() {
   const tableBody = document.createElement("tbody");
 
-  const rowWeather = renderRowWeather();
+  const rowWeather = renderRowDailyWeather();
   const rowMinTemp = renderRowMinTemp();
   const rowMaxTemp = renderRowMaxTemp();
-  const rowPrecipProb = renderRowPrecipProb();
+  const rowPrecipProb = renderRowDailyPrecipProb();
 
   tableBody.append(rowWeather, rowMinTemp, rowMaxTemp, rowPrecipProb);
 
   return tableBody;
 }
 
-function renderRowWeather() {
+function renderRowDailyWeather() {
   const rowWeather = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Weather";
@@ -155,7 +149,7 @@ function renderRowMaxTemp() {
   return rowMaxTemp;
 }
 
-function renderRowPrecipProb() {
+function renderRowDailyPrecipProb() {
   const rowPrecipProb = document.createElement("tr");
   const rowHeader = renderRowHeader();
   rowHeader.textContent = "Precipitation Probability";
@@ -170,16 +164,113 @@ function renderRowPrecipProb() {
   return rowPrecipProb;
 }
 
+function renderHourlyTableContainer() {
+  const tableContainer = document.createElement("div");
+  tableContainer.classList.add("table-container", "hourly");
+
+  const table = renderHourlyTable();
+  tableContainer.append(table);
+
+  return tableContainer;
+}
+
+function renderHourlyTable() {
+  const table = document.createElement("table");
+
+  const caption = renderHourlyCaption();
+  const tableHead = renderHourlyTableHead();
+  const tableBody = renderHourlyTableBody();
+
+  table.append(caption, tableHead);
+  return table;
+}
+
+function renderHourlyCaption() {
+  const caption = document.createElement("caption");
+  const captionTitle = document.createElement("h3");
+
+  captionTitle.textContent = "Hourly Forecast";
+  caption.append(captionTitle);
+
+  return caption;
+}
+
+function renderHourlyTableHead() {
+  const tableHead = document.createElement("thead");
+  const tableRow = document.createElement("tr");
+
+  const rowHeader = renderRowHeader();
+  rowHeader.textContent = "Time";
+  tableRow.append(rowHeader);
+
+  day.hours.forEach((hour) => {
+    const columnHeader = document.createElement("th");
+    columnHeader.scope = "col";
+    columnHeader.textContent = hour.datetime;
+    tableRow.append(columnHeader);
+  });
+
+  tableHead.append(tableRow);
+
+  return tableHead;
+}
+
+function renderHourlyTableBody() {
+  const tableBody = document.createElement("tbody");
+}
+
 function renderRowHeader() {
   const rowHeader = document.createElement("th");
   rowHeader.scope = "row";
   return rowHeader;
 }
 
+export function getLocation(form) {
+  return form.querySelector("input").value;
+}
+
+export function updateForecast(newForecast) {
+  forecast = newForecast;
+  updateTable();
+}
+
 function updateTable() {
   const tableContainer = main.querySelector(".table-container");
   const newTableContainer = renderTableContainer();
   main.replaceChild(newTableContainer, tableContainer);
+}
+
+export function getCurrentForecast() {
+  return forecast;
+}
+
+export function getDailyColumns() {
+  const tableRows = main.querySelectorAll(".daily tr");
+  const columns = Array(8)
+    .fill([])
+    .map(() => Array(5).fill());
+  for (let row = 0; row < tableRows.length; row++) {
+    const tableRow = tableRows[row].childNodes;
+    for (let col = 0; col < tableRow.length; col++) {
+      columns[col][row] = tableRow[col];
+      columns[col][row].classList.add(`col-${col}`);
+    }
+  }
+
+  console.log(columns);
+  return columns;
+}
+
+export function highlightColumn(columnName) {
+  main
+    .querySelectorAll(`.${columnName}`)
+    .forEach((cell) => cell.classList.add("highlighted"));
+}
+
+export function deHighlightColumn(columnName) {
+  main
+    .querySelectorAll(`.${columnName}`)
+    .forEach((cell) => cell.classList.remove("highlighted"));
 }
 
 export default main;
