@@ -1,24 +1,31 @@
 import "./styles.css";
 import header, { renderHeader } from "./header.js";
-import main, {
-  renderMain,
+import main, { renderMain, getLocation } from "./main.js";
+import dailyTableContainer, {
+  renderDailyTableContainer,
   updateForecast,
-  getLocation,
+  updateTable,
   getDailyColumns,
   highlightColumn,
   deHighlightColumn,
-  getCurrentForecast,
-} from "./main.js";
+} from "./daily-table.js";
+import hourlyTableContainer, {
+  renderHourlyTableContainer,
+} from "./hourly-table.js";
 import { getForecast } from "./forecast-storage.js";
 
 const body = document.body;
 
 async function init() {
   renderHeader();
+  renderMain();
   const forecast = await getForecast();
-  renderMain(forecast);
+  const day = forecast.days[0];
+  renderDailyTableContainer(forecast);
+  renderHourlyTableContainer(day);
   setColumnListeners();
 
+  main.append(dailyTableContainer, hourlyTableContainer);
   body.append(header, main);
 }
 
@@ -53,8 +60,6 @@ function clickColumnHandler(cell) {
   cell.addEventListener("mousedown", (e) => {
     const cell = e.target ? e.target.closest("td") : e.target;
     const columnName = cell.className.replace(" ", ".");
-    const currentForecast = getCurrentForecast();
-    console.log(currentForecast);
   });
 }
 
@@ -65,6 +70,7 @@ main.addEventListener("submit", async (e) => {
     const location = getLocation(form);
     const forecast = await getForecast(location);
     updateForecast(forecast);
+    updateTable();
     setColumnListeners();
   }
 });

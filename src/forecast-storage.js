@@ -9,7 +9,8 @@ const params = new URLSearchParams({
   unitGroup: "metric",
   key: API_KEY,
   include: "days,hours",
-  elements: "datetime,icon,precipprob,tempmin,tempmax,temp",
+  elements:
+    "datetime,icon,precip,precipprob,tempmin,tempmax,temp,windspeed,winddir,humidity",
   iconSet: "icons2",
 });
 
