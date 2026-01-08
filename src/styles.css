@@ -13,6 +13,8 @@
   --glass-button1: rgba(15, 78, 100, 0.75);
   --glass-button2: rgba(15, 78, 100, 0.85);
   --glass-button3: rgba(15, 78, 100, 1);
+  --glass-scroll-track: transparent;
+  --glass-scroll-thumb: rgba(255, 255, 255, 0.25);
 }
 
 * {
@@ -22,7 +24,7 @@
 }
 
 body {
-  height: 150dvh;
+  height: 100dvh;
 
   background-color: var(--background-navy);
 
@@ -44,10 +46,10 @@ header {
 
 main {
   display: grid;
-  grid-template-rows: 100px 500px 1fr;
+  grid-template-rows: 50px 350px 420px;
   grid-template-columns: 1200px;
   justify-content: center;
-  row-gap: 2rem;
+  row-gap: 1rem;
 }
 
 form.location {
@@ -76,7 +78,7 @@ form.location {
 
 .location input,
 .location button {
-  height: 57px;
+  height: 35px;
 }
 
 .location input {
@@ -89,7 +91,7 @@ form.location {
 
   border: 1px solid var(--glass-border2);
 
-  font-size: 1.8rem;
+  font-size: 100%;
   color: var(--text-white);
 }
 
@@ -124,8 +126,6 @@ button:active {
 }
 
 .table-container {
-  padding: 10px 30px;
-
   background-color: var(--glass-background1);
   background-image: radial-gradient(
     farthest-side at 80% 70%,
@@ -136,11 +136,16 @@ button:active {
 
   border: 1px solid var(--glass-border1);
   border-radius: var(--glass-radius1);
+}
 
-  display: grid;
+.table-container.daily {
+  padding: 10px 30px;
 }
 
 .daily table {
+  width: 100%;
+  height: 83.5%;
+
   table-layout: fixed;
   background-color: var(--glass-background2);
 
@@ -161,9 +166,9 @@ button:active {
   text-align: center;
 }
 
-/* icon row */
+/* daily icon row */
 .daily tbody tr:first-child {
-  height: 150px;
+  height: 100px;
 }
 
 .daily th.highlighted,
@@ -182,15 +187,40 @@ button:active {
 }
 
 .hourly caption {
+  align-self: center;
   text-align: left;
+  position: sticky;
+  left: 0;
 }
 
 .table-container.hourly {
   max-width: 100%;
+
   overflow-x: scroll;
-  /* overflow-y: hidden; */
+  scrollbar-color: var(--glass-scroll-thumb) var(--glass-scroll-track);
 }
 
 .hourly table {
-  min-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.hourly td {
+  text-align: center;
+}
+
+.hourly th[scope="row"] {
+  position: sticky;
+  left: 0;
+
+  background-color: black;
+}
+
+/* hourly icon row */
+.hourly tbody tr:first-child {
+  height: 100px;
+}
+
+.hourly tbody tr {
+  height: 40px;
 }
