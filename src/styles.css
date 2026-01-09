@@ -3,7 +3,7 @@
   --text-white: #f0e6dc;
   --glass-background1: rgba(255, 255, 255, 0.05);
   --glass-background2: rgba(255, 255, 255, 0.13);
-  --glass-background3: rgba(255, 255, 255, 0.1);
+  --glass-column-highlight: rgba(255, 255, 255, 0.1);
   --glass-gradient: rgba(255, 255, 255, 0.09);
   --glass-border1: rgba(255, 255, 255, 0.06);
   --glass-border2: rgba(255, 255, 255, 0.17);
@@ -23,6 +23,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+img {
+  /* max-width: 70px; */
 }
 
 body {
@@ -165,7 +169,7 @@ button:active {
   position: sticky;
   left: 0;
   height: 40px;
-  width: 300px;
+  max-width: 80%;
   text-align: left;
 }
 
@@ -193,31 +197,32 @@ button:active {
   height: 100px;
 }
 
-.daily th.highlighted,
-.daily td.highlighted {
-  background-color: var(--glass-background3);
+.daily .highlighted {
+  background-color: var(--glass-column-highlight);
 }
 
-/* top-right cell adaptaion */
-.daily th.highlighted:last-child {
-  border-radius: 0 var(--glass-radius2) 0 0;
-}
-
-/* bottom-right cell adaptaion */
-.daily tbody tr:last-child td.highlighted:last-child {
-  border-radius: 0 0 var(--glass-radius2) 0;
+.daily .pinned {
+  background-color: var(--glass-column-highlight);
 }
 
 .hourly caption {
-  position: sticky;
-  text-align: left;
-  left: 0;
+  padding: 5px 0;
   width: 400px;
+  height: 30px;
+
+  position: sticky;
+  left: 0;
+
+  text-align: left;
 }
 
 .hourly table {
   table-layout: fixed;
   border-collapse: collapse;
+}
+
+.hourly thead {
+  height: 30px;
 }
 
 .hourly td {
@@ -228,6 +233,7 @@ button:active {
   position: sticky;
   left: 0;
   min-width: 110px;
+  z-index: 2;
 
   background-color: var(--glass-hourly-row-header);
 }
@@ -239,4 +245,14 @@ button:active {
 
 .hourly tbody tr {
   height: 40px;
+}
+
+.wind-arrow {
+  max-width: 35px;
+  transform: rotate(var(--deg, 0deg));
+  transform-origin: 50% 60%;
+}
+
+.hourly .highlighted {
+  background-color: var(--glass-column-highlight);
 }

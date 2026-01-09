@@ -4,11 +4,13 @@ const dailyTableContainer = document.createElement("div");
 dailyTableContainer.classList.add("table-container", "daily");
 
 let forecast = null;
+let dailyColumns = [];
 
 export function renderDailyTableContainer(currentForecast) {
   forecast = currentForecast;
   const dailyTable = renderDailyTable();
   dailyTableContainer.append(dailyTable);
+  setDailyColumns();
 }
 
 function renderDailyTable() {
@@ -27,7 +29,7 @@ function renderDailyCaption() {
   const caption = document.createElement("caption");
 
   const captionText = document.createElement("h2");
-  captionText.textContent = `Daily weather forecast: ${forecast.resolvedAddress}`;
+  captionText.textContent = `Daily Weather Forecast: ${forecast.resolvedAddress}`;
 
   caption.append(captionText);
 
@@ -75,7 +77,7 @@ function renderRowDailyWeather() {
   forecast.days.forEach((day) => {
     const tableData = document.createElement("td");
     const weatherIcon = document.createElement("img");
-    import(`./img/${day.icon}.png`).then(
+    import(`./img/set1/${day.icon}.png`).then(
       (src) => (weatherIcon.src = src.default),
     );
 
@@ -135,43 +137,58 @@ function renderRowHeader(text) {
   return rowHeader;
 }
 
+export function getCurrentForecast() {
+  return forecast;
+}
+
 export function updateForecast(newForecast) {
   forecast = newForecast;
 }
 
-export function updateTable() {
+export function updateDailyTable() {
   const table = dailyTableContainer.querySelector("table");
-  const newTable = renderDailyTable(forecast);
+  const newTable = renderDailyTable();
   dailyTableContainer.replaceChild(newTable, table);
+  setDailyColumns();
 }
 
-export function getDailyColumns() {
+function setDailyColumns() {
   const tableRows = dailyTableContainer.querySelectorAll("tr");
-  const columns = Array(16)
+  const columns = Array(forecast.days.length)
     .fill([])
-    .map(() => Array(5).fill());
+    .map(() => Array(forecast.days[0].length).fill());
   for (let row = 0; row < tableRows.length; row++) {
     const tableRow = tableRows[row].childNodes;
-    for (let col = 0; col < tableRow.length; col++) {
-      columns[col][row] = tableRow[col];
-      columns[col][row].classList.add(`col-${col}`);
+    for (let col = 1; col < tableRow.length; col++) {
+      const colArrayIdx = col - 1;
+      columns[colArrayIdx][row] = tableRow[col];
+      columns[colArrayIdx][row].dataset.colId = colArrayIdx;
     }
   }
-
-  console.log(columns);
-  return columns;
+  dailyColumns = columns;
 }
 
-export function highlightColumn(columnName) {
-  dailyTableContainer
-    .querySelectorAll(`.${columnName}`)
-    .forEach((cell) => cell.classList.add("highlighted"));
+export function highlightDailyColumn(cell) {
+  const columnIdx = Number(cell.dataset.colId);
+  if (Number.isNaN(columnIdx)) return;
+  dailyColumns[columnIdx].forEach((cell) =>
+    cell.classList.toggle("highlighted", true),
+  );
 }
 
-export function deHighlightColumn(columnName) {
-  dailyTableContainer
-    .querySelectorAll(`.${columnName}`)
-    .forEach((cell) => cell.classList.remove("highlighted"));
+export function deHighlightDailyColumn(cell) {
+  const columnIdx = Number(cell.dataset.colId);
+  if (Number.isNaN(columnIdx)) return;
+  dailyColumns[columnIdx].forEach((cell) =>
+    cell.classList.toggle("highlighted", false),
+  );
+}
+
+export function pinDailyColumn(colIdx) {
+  dailyColumns.forEach((column, Idx) => {
+    const isSelected = Idx === colIdx;
+    column.forEach((cell) => cell.classList.toggle("pinned", isSelected));
+  });
 }
 
 export default dailyTableContainer;
