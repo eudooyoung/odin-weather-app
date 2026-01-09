@@ -18,12 +18,16 @@ import hourlyTableContainer, {
   deHighlightHourlyColumn,
 } from "./hourly-table.js";
 import { getForecast } from "./forecast-storage.js";
+import loading from "./loading.js";
 
 const body = document.body;
 
 async function init() {
   renderHeader();
   renderMain();
+
+  main.append(loading);
+  body.append(header, main);
   try {
     const forecast = await getForecast();
     const day = forecast.days[0];
@@ -31,8 +35,8 @@ async function init() {
     renderHourlyTableContainer(day);
     pinDailyColumn(0);
 
+    main.removeChild(loading);
     main.append(dailyTableContainer, hourlyTableContainer);
-    body.append(header, main);
   } catch (error) {
     console.error(error);
   }
@@ -42,19 +46,36 @@ main.addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.target;
   if (form.matches(".location")) {
+    if (dailyTableContainer.isConnected) {
+      main.removeChild(dailyTableContainer);
+    }
+    if (hourlyTableContainer.isConnected) {
+      main.removeChild(hourlyTableContainer);
+    }
+    main.append(loading);
     const location = getLocation(form);
     try {
       const forecast = await getForecast(location);
       updateForecast(forecast);
       updateDailyTable();
       pinDailyColumn(0);
+
+      if (loading.isConnected) main.removeChild(loading);
+      main.append(dailyTableContainer, hourlyTableContainer);
     } catch (error) {
+      if (loading.isConnected) main.removeChild(loading);
+
       console.error(error);
       const input = form.querySelector("input");
       input.setCustomValidity("Invalid address. Please check address again.");
       input.reportValidity();
     }
   }
+});
+
+main.addEventListener("input", (e) => {
+  const input = e.target;
+  input.setCustomValidity("");
 });
 
 dailyTableContainer.addEventListener("mouseover", (e) => {
