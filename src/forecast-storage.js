@@ -3,8 +3,8 @@ import { format, addDays } from "date-fns";
 const API_KEY = "3TJJEBMMGEWLXASWDF9ABF67B";
 const URL =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-const startDate = format(new Date(), "yyyy-MM-dd");
-const endDate = format(addDays(new Date(), 6), "yyyy-MM-dd");
+// const startDate = format(new Date(), "yyyy-MM-dd");
+// const endDate = format(addDays(new Date(), 6), "yyyy-MM-dd");
 const params = new URLSearchParams({
   unitGroup: "metric",
   key: API_KEY,
@@ -16,7 +16,7 @@ const params = new URLSearchParams({
 
 export async function getForecast(location = "Seoul") {
   location = location === "" ? "Seoul" : location;
-  const endPoint = `${URL}${location}/${startDate}/${endDate}`;
+  const endPoint = `${URL}${location}`;
   const parameters = params.toString();
 
   try {

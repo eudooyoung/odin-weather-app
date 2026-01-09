@@ -15,6 +15,8 @@
   --glass-button3: rgba(15, 78, 100, 1);
   --glass-scroll-track: transparent;
   --glass-scroll-thumb: rgba(255, 255, 255, 0.25);
+  --glass-daily-row-header: #2c4061;
+  --glass-hourly-row-header: #0d244a;
 }
 
 * {
@@ -136,22 +138,35 @@ button:active {
 
   border: 1px solid var(--glass-border1);
   border-radius: var(--glass-radius1);
+
+  max-width: 100%;
+
+  overflow-x: scroll;
+  scrollbar-color: var(--glass-scroll-thumb) var(--glass-scroll-track);
 }
 
 .table-container.daily {
-  padding: 10px 30px;
+  padding: 10px 0 0 0;
 }
 
 .daily table {
   width: 100%;
-  height: 83.5%;
+  height: 86%;
 
   table-layout: fixed;
   background-color: var(--glass-background2);
 
-  border: 1px solid var(--glass-border2);
-  border-radius: var(--glass-radius2);
+  border-top: 1px solid var(--glass-border2);
+  border-bottom: 1px solid var(--glass-border2);
   border-spacing: 0;
+}
+
+.daily caption {
+  position: sticky;
+  left: 0;
+  height: 40px;
+  width: 300px;
+  text-align: left;
 }
 
 .daily thead {
@@ -159,7 +174,14 @@ button:active {
 }
 
 .daily th[scope="row"] {
-  width: 200px;
+  position: sticky;
+  left: 0;
+  width: 110px;
+  background-color: var(--glass-daily-row-header);
+}
+
+.daily th {
+  width: 90px;
 }
 
 .daily td {
@@ -187,17 +209,10 @@ button:active {
 }
 
 .hourly caption {
-  align-self: center;
-  text-align: left;
   position: sticky;
+  text-align: left;
   left: 0;
-}
-
-.table-container.hourly {
-  max-width: 100%;
-
-  overflow-x: scroll;
-  scrollbar-color: var(--glass-scroll-thumb) var(--glass-scroll-track);
+  width: 400px;
 }
 
 .hourly table {
@@ -212,8 +227,9 @@ button:active {
 .hourly th[scope="row"] {
   position: sticky;
   left: 0;
+  min-width: 110px;
 
-  background-color: black;
+  background-color: var(--glass-hourly-row-header);
 }
 
 /* hourly icon row */

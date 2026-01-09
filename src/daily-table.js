@@ -26,12 +26,10 @@ function renderDailyTable() {
 function renderDailyCaption() {
   const caption = document.createElement("caption");
 
-  const location = document.createElement("h2");
-  location.textContent = forecast.resolvedAddress;
   const captionText = document.createElement("h2");
-  captionText.textContent = "7-day weather forecast";
+  captionText.textContent = `Daily weather forecast: ${forecast.resolvedAddress}`;
 
-  caption.append(location, captionText);
+  caption.append(captionText);
 
   return caption;
 }
@@ -40,8 +38,7 @@ function renderDailyTableHead() {
   const tableHead = document.createElement("thead");
   const tableRow = document.createElement("tr");
 
-  const rowHeader = renderRowHeader();
-  rowHeader.textContent = "Date";
+  const rowHeader = renderRowHeader("date");
   tableRow.append(rowHeader);
 
   forecast.days.forEach((day) => {
@@ -72,8 +69,7 @@ function renderDailyTableBody() {
 
 function renderRowDailyWeather() {
   const rowWeather = document.createElement("tr");
-  const rowHeader = renderRowHeader();
-  rowHeader.textContent = "Weather";
+  const rowHeader = renderRowHeader("weather");
   rowWeather.append(rowHeader);
 
   forecast.days.forEach((day) => {
@@ -92,8 +88,7 @@ function renderRowDailyWeather() {
 
 function renderRowMinTemp() {
   const rowMinTemp = document.createElement("tr");
-  const rowHeader = renderRowHeader();
-  rowHeader.textContent = "Minimum Temperature";
+  const rowHeader = renderRowHeader("minimum temperature");
   rowMinTemp.append(rowHeader);
 
   forecast.days.forEach((day) => {
@@ -107,8 +102,7 @@ function renderRowMinTemp() {
 
 function renderRowMaxTemp() {
   const rowMaxTemp = document.createElement("tr");
-  const rowHeader = renderRowHeader();
-  rowHeader.textContent = "Maximum Temperature";
+  const rowHeader = renderRowHeader("maximum temperature");
   rowMaxTemp.append(rowHeader);
 
   forecast.days.forEach((day) => {
@@ -122,8 +116,7 @@ function renderRowMaxTemp() {
 
 function renderRowDailyPrecipProb() {
   const rowPrecipProb = document.createElement("tr");
-  const rowHeader = renderRowHeader();
-  rowHeader.textContent = "Precipitation Probability";
+  const rowHeader = renderRowHeader("precipitation probability");
   rowPrecipProb.append(rowHeader);
 
   forecast.days.forEach((day) => {
@@ -135,9 +128,10 @@ function renderRowDailyPrecipProb() {
   return rowPrecipProb;
 }
 
-function renderRowHeader() {
+function renderRowHeader(text) {
   const rowHeader = document.createElement("th");
   rowHeader.scope = "row";
+  rowHeader.textContent = text;
   return rowHeader;
 }
 
@@ -153,7 +147,7 @@ export function updateTable() {
 
 export function getDailyColumns() {
   const tableRows = dailyTableContainer.querySelectorAll("tr");
-  const columns = Array(8)
+  const columns = Array(16)
     .fill([])
     .map(() => Array(5).fill());
   for (let row = 0; row < tableRows.length; row++) {

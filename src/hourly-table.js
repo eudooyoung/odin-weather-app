@@ -1,3 +1,5 @@
+import { format, parse } from "date-fns";
+
 const hourlyTableContainer = document.createElement("div");
 hourlyTableContainer.classList.add("table-container", "hourly");
 
@@ -25,7 +27,7 @@ function renderHourlyCaption() {
   const caption = document.createElement("caption");
   const captionTitle = document.createElement("h3");
 
-  captionTitle.textContent = "Hourly Forecast";
+  captionTitle.textContent = `Hourly Forecast: ${day.datetime}`;
   caption.append(captionTitle);
 
   return caption;
@@ -42,7 +44,9 @@ function renderHourlyTableHead() {
   day.hours.forEach((hour) => {
     const columnHeader = document.createElement("th");
     columnHeader.scope = "col";
-    columnHeader.textContent = hour.datetime;
+    const datetimeParsed = parse(hour.datetime, "HH:mm:ss", new Date());
+    const datetimeFormatted = format(datetimeParsed, "h a");
+    columnHeader.textContent = datetimeFormatted;
     tableRow.append(columnHeader);
   });
 
