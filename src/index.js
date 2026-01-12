@@ -19,15 +19,17 @@ import hourlyTableContainer, {
 } from "./hourly-table.js";
 import { getForecast } from "./forecast-storage.js";
 import loading from "./loading.js";
+import footer, { renderFooter } from "./footer.js";
 
 const body = document.body;
 
 async function init() {
   renderHeader();
   renderMain();
+  renderFooter();
 
   main.append(loading);
-  body.append(header, main);
+  body.append(header, main, footer);
   try {
     const forecast = await getForecast();
     const day = forecast.days[0];
